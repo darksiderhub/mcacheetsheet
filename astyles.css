@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 20px;
+}
+
+h1 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 10px;
+}
+
+.experiment-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.experiment-card summary {
+    display: block; /* Ensures full click area */
+    padding: 15px;
+    background-color: #e0f7fa; /* Light blue background for the summary */
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #00796b;
+    position: relative;
+    list-style: none;
+}
+
+/* Custom indicator for the expanded/collapsed state */
+.experiment-card summary::after {
+    content: '▶';
+    position: absolute;
+    right: 15px;
+    transition: transform 0.3s;
+}
+
+.experiment-card[open] summary::after {
+    content: '▼';
+    transform: rotate(0deg);
+}
+
+.experiment-card summary h2 {
+    display: inline;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.content {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+h3 {
+    color: #0056b3;
+    margin-top: 20px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+.code-block {
+    background-color: #272822; /* Dark background for code */
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    margin-top: 15px;
+}
+
+.diagram {
+    margin: 20px 0;
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #bbb;
+    background-color: #fafafa;
+}
+
+.diagram img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}

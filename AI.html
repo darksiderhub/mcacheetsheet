@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI/ML Project Algorithms</title>
+    <link rel="stylesheet" href="astyles.css">
+</head>
+<body>
+
+    <h1>🧠 AI/ML Project Algorithms Implementation</h1>
+    <p>Click on any algorithm title to expand and view the full details, code, and visualizations.</p>
+
+  <details class="experiment-card">
+        <summary>
+            <h2>1.Diwali Sales Analysis (Exploratory Data Analysis)</h2>
+        </summary>
+        <div class="content">
+            <p>Exploratory Data Analysis (EDA) of Diwali sales data to understand buyer demographics, purchasing power, and popular product categories.</p>
+
+            <h3>Data Preparation and Cleaning</h3>
+            <p>Initial steps involve importing libraries, loading data, checking for null values, dropping irrelevant columns (`Status`, `unnamed1`), converting the `Amount` column to an integer type, and renaming the `Marital_Status` column to 'Shaadi'.</p>
+            <pre class="code-block"><code># import python libraries
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt # visualizing data
+%matplotlib inline
+import seaborn as sns
+
+# import csv file
+df = pd.read_csv('Diwali Sales Data.csv', encoding= 'unicode_escape')
+
+# drop unrelated/blank columns
+df.drop(['Status', 'unnamed1'], axis=1, inplace=True)
+
+# drop null values
+df.dropna(inplace=True)
+
+# change data type of 'Amount'
+df['Amount'] = df['Amount'].astype('int')
+
+# rename column
+df.rename(columns= {'Marital_Status':'Shaadi'})</code></pre>
+
+            <h3>Exploratory Data Analysis (EDA) Plots</h3>
+
+            <h4>Gender and Age Analysis</h4>
+            <p>Analysis shows that **females are the primary buyers** in terms of both order count and total purchasing power. The largest group of buyers falls into the **26-35 years old female** demographic.</p>
+            
+            <pre class="code-block"><code># Order Count by Gender
+ax = sns.countplot(x = 'Gender',data = df)
+for bars in ax.containers:
+    ax.bar_label(bars)</code></pre>
+            <pre class="code-block"><code># Total Amount by Gender
+sales_gen = df.groupby(['Gender'], as_index=False)['Amount'].sum().sort_values(by='Amount', ascending=False)
+sns.barplot(x = 'Gender',y= 'Amount' ,data = sales_gen)</code></pre>
+            <div class="diagram">
+                <p>Total Sales Amount by Gender</p>
+                <img src="./temp/a20.png" alt="Bar chart showing total sales amount by Gender">
+            </div>
+            
+            <pre class="code-block"><code># Order Count by Age Group and Gender (using hue)
+ax = sns.countplot(data = df, x = 'Age Group', hue = 'Gender')
+for bars in ax.containers:
+    ax.bar_label(bars)</code></pre>
+            <div class="diagram">
+                <p>Order Count by Age Group and Gender</p>
+                <img src="./temp/a13.png" alt="Bar chart showing order count across Age Groups segmented by Gender">
+            </div>
+
+            <h4>State and Occupation Analysis</h4>
+            <p>The highest volume of orders and total sales comes from **Uttar Pradesh, Maharashtra, and Karnataka**. Most buyers work in the **IT, Healthcare, and Aviation** sectors.</p>
+            
+            <pre class="code-block"><code># Total Orders from Top 10 States
+sales_state = df.groupby(['State'], as_index=False)['Orders'].sum().sort_values(by='Orders', ascending=False).head(10)
+sns.set(rc={'figure.figsize':(15,5)})
+sns.barplot(data = sales_state, x = 'State',y= 'Orders')</code></pre>
+            <div class="diagram">
+                <p>Top 10 States by Orders</p>
+                <img src="./temp/a15.png" alt="Bar chart of total orders from top 10 states">
+            </div>
+            
+            <pre class="code-block"><code># Total Sales Amount from Top 10 States
+sales_state = df.groupby(['State'], as_index=False)['Amount'].sum().sort_values(by='Amount', ascending=False).head(10)
+sns.set(rc={'figure.figsize':(15,5)})
+sns.barplot(data = sales_state, x = 'State',y= 'Amount')</code></pre>
+            <div class="diagram">
+                <p>Top 10 States by Sales Amount</p>
+                <img src="./temp/a16.png" alt="Bar chart of total sales amount from top 10 states">
+            </div>
+            
+            <pre class="code-block"><code># Total Sales Amount by Occupation
+sales_state = df.groupby(['Occupation'], as_index=False)['Amount'].sum().sort_values(by='Amount', ascending=False)
+sns.set(rc={'figure.figsize':(20,5)})
+sns.barplot(data = sales_state, x = 'Occupation',y= 'Amount')</code></pre>
+            <div class="diagram">
+                <p>Sales Amount by Occupation</p>
+                <img src="./temp/a17.png" alt="Bar chart showing sales amount across different Occupations">
+            </div>
+            
+            <h4>Product Category Analysis</h4>
+            <p>The most sold products and highest total sales are from the **Food, Clothing, and Electronics** categories.</p>
+            
+            <pre class="code-block"><code># Order Count by Product Category
+ax = sns.countplot(data = df, x = 'Product_Category')
+sns.set(rc={'figure.figsize':(20,5)})
+for bars in ax.containers:
+    ax.bar_label(bars)</code></pre>
+            <div class="diagram">
+                <p>Order Count by Product Category</p>
+                <img src="./temp/a18.png" alt="Bar chart showing count of orders across Product Categories">
+            </div>
+            
+            <pre class="code-block"><code># Total Orders from Top 10 Products
+fig1, ax1 = plt.subplots(figsize=(12,7))
+df.groupby('Product_ID')['Orders'].sum().nlargest(10).sort_values(ascending=False).plot(kind='bar')</code></pre>
+            <div class="diagram">
+                <p>Top 10 Products by Orders</p>
+                <img src="./temp/a19.png" alt="Bar chart of the top 10 most sold Product IDs">
+            </div>
+
+            <h3>Conclusion</h3>
+            <p class="note">**Married women (age group 26-35 yrs) from UP, Maharastra, and Karnataka working in IT, Healthcare and Aviation are more likely to buy products from Food, Clothing and Electronics category**.</p>
+        </div>
+    </details>
+
+<details class="experiment-card">
+        <summary>
+            <h2>2. Train-Test Split and Linear Regression (Car Prices)</h2>
+        </summary>
+        <div class="content">
+            <p>This project analyzes a dataset containing prices of used BMW cars and builds a prediction function to predict the price using mileage and age of the car as input. It utilizes the `sklearn train_test_split` method to split the dataset.</p>
+
+            <h3>Initial Data and Visualization</h3>
+            <p>The core approach is to split the available data into **Training** (to train the model) and **Testing** (to make predictions and evaluate the trained model) sets. Using a separate test set helps prevent the model from overfitting and provides a genuine assessment of model accuracy.</p>
+            
+            <pre class="code-block"><code>import pandas as pd
+df = pd.read_csv("carprices.csv")
+df.head()</code></pre>
+            
+            <p class="note">Looking at the scatter plots, a **linear relationship** is clearly visible between the independent variables (Mileage, Age) and the dependent variable ('Sell Price'), which justifies using a Linear Regression model.</p>
+            
+            <div class="diagram">
+                <p>Car Mileage Vs Sell Price ($)</p>
+                <img src="./temp/a16.png" alt="Scatter plot of Car Mileage vs. Sell Price">
+            </div>
+            <pre class="code-block"><code>plt.scatter(df['Mileage'],df['Sell Price($)'])</code></pre>
+
+            <div class="diagram">
+                <p>Car Age Vs Sell Price ($)</p>
+                <img src="./temp/a17.png" alt="Scatter plot of Car Age vs. Sell Price">
+            </div>
+            <pre class="code-block"><code>plt.scatter(df['Age(yrs)'],df['Sell Price($)'])</code></pre>
+
+
+            <h3>Splitting and Training the Model</h3>
+            <p>Input features (**X**) are defined as 'Mileage' and 'Age(yrs)', and the target variable (**y**) is 'Sell Price($)'. The data is split with 70% for training and 30% for testing (as shown in the example below, where <code>test_size=0.3</code>).</p>
+            
+            <pre class="code-block"><code>X = df[['Mileage','Age(yrs)']]
+y = df['Sell Price($)']
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Split data: 70% train, 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3) 
+
+# Training the model
+clf = LinearRegression()
+clf.fit(X_train, y_train)</code></pre>
+            
+            <h3>Prediction and Evaluation</h3>
+            <p>The model is then used to predict the prices for the test set (`X_test`), and its performance is evaluated using the `score` method (which calculates the R² score for regression).</p>
+            
+            <pre class="code-block"><code># Predicting on the test set
+y_predicted = clf.predict(X_test)
+
+# Calculating the R^2 score
+score = clf.score(X_test, y_test) 
+print(f"Model Score (R^2): {score}")</code></pre>
+            
+            <p class="note">The `random_state` argument (e.g., `random_state=10`) is essential for ensuring the same random split is generated every time you run the code, making the results **reproducible**.</p>
+
+            <pre class="code-block"><code># Example of splitting with random_state=10 for reproducibility
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=10)
+X_test # Viewing the X_test set to show the split is deterministic
+</code></pre>
+        </div>
+    </details>
+    <details class="experiment-card">
+        <summary>
+            <h2>3. Simple SVM Classification with Visualization</h2>
+        </summary>
+        <div class="content">
+            <p>Implementation of a Support Vector Machine (SVM) with a linear kernel on the Iris dataset, visualized using the first two features.</p>
+            
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>from sklearn import datasets
+from sklearn.svm import SVC
+import matplotlib.pyplot as plt
+
+# Load dataset (first 2 features for easy plotting)
+iris = datasets.load_iris()
+X = iris.data[:, :2]
+y = iris.target
+
+# Train SVM
+model = SVC(kernel='linear')
+model.fit(X, y)
+
+# Basic plot
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.xlabel('Sepal length')
+plt.ylabel('Sepal width')
+plt.title('SVM - Iris Data (Basic Plot)')
+plt.show()</code></pre>
+            
+            <h3>Output Visualization</h3>
+            <div class="diagram">
+              <img src="./temp/a1.png" alt="SVM - Iris Data (Basic Plot)">
+            </div>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>4. Linear Regression Algorithm</h2>
+        </summary>
+        <div class="content">
+            <p>Step-by-step implementation of the Linear Regression algorithm for a simple Salary vs. Experience dataset.</p>
+
+            <h3>Key Libraries</h3>
+            <ul>
+                <li><code>numpy</code>, <code>pandas</code>, <code>matplotlib.pyplot</code></li>
+                <li><code>LinearRegression</code>, <code>train_test_split</code>, <code>mean_squared_error</code>, <code>r2_score</code> from <code>sklearn</code></li>
+            </ul>
+
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Sample dataset
+data = {
+'Experience': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+'Salary': [30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000]
+}
+df = pd.DataFrame(data)
+
+# Split features and target
+X = df[['Experience']]
+y = df['Salary']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+print("R^2 Score:", r2_score(y_test, y_pred))
+
+# Visualize
+plt.scatter(X, y, color='blue', label='Actual')
+plt.plot(X, model.predict(X), color='red', linewidth=2, label='Prediction')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.title('Linear Regression Example')
+plt.legend()
+plt.show()</code></pre>
+
+            <h3>Output and Visualization</h3>
+            <p>Output shows perfect fit due to clean sample data: Mean Squared Error: 0.0, R^2 Score: 1.0.</p>
+            <div class="diagram">
+                <img src="./temp/a2.png" alt="Linear Regression Example">
+            </div>
+        </div>
+    </details>
+    
+    <details class="experiment-card">
+        <summary>
+            <h2>5. K-Nearest Neighbors (KNN) Algorithm</h2>
+        </summary>
+        <div class="content">
+            <p>Implementation of the K-Nearest Neighbors (KNN) algorithm for classification using the Iris dataset (k=3).</p>
+
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>from sklearn.datasets import load_iris
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data[:, :2]  # Only use first 2 features for simplicity
+y = iris.target
+
+# Split into training and testing data (70% train, 30% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+# Create KNN classifier with k=3
+knn = KNeighborsClassifier(n_neighbors=3)
+
+# Train and Predict
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+
+# Accuracy
+print("Accuracy:", accuracy_score(y_test, y_pred))</code></pre>
+
+            <h3>Output Results</h3>
+            <p>The model achieved an Accuracy of 0.7333...</p>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>6. k-Means Clustering Algorithm</h2>
+        </summary>
+        <div class="content">
+            <p>Implementation of the k-Means unsupervised clustering algorithm on synthetic data generated using <code>make_blobs</code>.</p>
+
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+
+# Create sample data (300 samples, 3 centers)
+X, y_true = make_blobs(n_samples=300, centers=3, cluster_std=0.60, random_state=0)
+
+# Plot the data points
+plt.scatter(X[:, 0], X[:, 1], s=50)
+plt.title("Original Data Points")
+plt.show()
+
+# Apply k-Means Clustering
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(X)
+y_kmeans = kmeans.predict(X)
+
+# Plot the clusters with centroids
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50)
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='red', s=50, marker='X')
+plt.title("k-Means Clustering Output")
+plt.show()</code></pre>
+
+            <h3>Output Visualizations</h3>
+            <div class="diagram">
+                <img src="./temp/a3.png" alt="Original Data Points">
+            </div>
+            <div class="diagram">
+                <img src="./temp/a7.png" alt="k-Means Clustering Output">
+            </div>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>7. Hierarchical Clustering (Customer Segmentation)</h2>
+        </summary>
+        <div class="content">
+            <p>Implementation of Agglomerative Hierarchical Clustering on a Customer Dataset to create customer segments based on Annual Income and Spending Score.</p>
+            <p class="note">The dataset is assumed to be available at the specified path: <code>C:/Mall_Customers.csv</code></p>
+
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+from sklearn.cluster import AgglomerativeClustering
+
+# Load dataset and select features
+df = pd.read_csv("C:/Mall_Customers.csv")
+X = df.iloc[:, [3, 4]].values # Annual Income & Spending Score
+
+# Step 1: Draw dendrogram (using 'ward' linkage)
+plt.figure(figsize=(8,5))
+dendrogram(linkage(X, method='ward'))
+plt.title("Dendrogram")
+plt.xlabel("Customers")
+plt.ylabel("Distance")
+plt.show()
+
+# Step 2: Fit hierarchical clustering with 5 clusters
+hc = AgglomerativeClustering(n_clusters=5, metric='euclidean', linkage='ward')
+y_hc = hc.fit_predict(X)
+
+# Step 3: Visualize clusters
+plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1], c='blue', label='Cluster 1')
+plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1], c='red', label='Cluster 2')
+plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1], c='green', label='Cluster 3')
+plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1], c='orange', label='Cluster 4')
+plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1], c='purple', label='Cluster 5')
+plt.title("Customer Segments (Hierarchical Clustering)")
+plt.xlabel("Annual Income (k$)")
+plt.ylabel("Spending Score (1-100)")
+plt.legend()
+plt.show()</code></pre>
+
+            <h3>Output Visualizations</h3>
+            <div class="diagram">
+                <img src="./temp/a4.png" alt="Dendrogram">
+            </div>
+            <div class="diagram">
+                <img src="./temp/a8.png" alt="Customer Segments (Hierarchical Clustering)">
+            </div>
+        </div>
+    </details>
+    
+    <details class="experiment-card">
+        <summary>
+            <h2>8. Principal Component Analysis (PCA) Algorithm</h2>
+        </summary>
+        <div class="content">
+            <p>Program to demonstrate Principal Component Analysis (PCA) for dimensionality reduction, projecting a 2D dataset to 1D.</p>
+
+            <h3>Key Steps</h3>
+            <ol>
+                <li>**Standardize Data:** Scale the data using <code>StandardScaler</code>.</li>
+                <li>**Apply PCA:** Reduce the dimensionality of the scaled data to 1 component.</li>
+                <li>**Visualize:** Plot the original 2D data against the 1D PCA projection.</li>
+            </ol>
+            
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+# Sample Data (2 features)
+X = np.array([[2.5, 2.4], [0.5, 0.7], [2.2, 2.9], [1.9, 2.2], [3.1, 3.0], 
+              [2.3, 2.7], [2.0, 1.6], [1.0, 1.1], [1.5, 1.6], [1.1, 0.9]])
+
+# Step 1: Standardize data
+X_scaled = StandardScaler().fit_transform(X)
+
+# Step 2: PCA to 1D
+pca = PCA(n_components=1)
+X_pca = pca.fit_transform(X_scaled)
+
+# Step 3: Plot Original vs PCA Projection
+plt.figure(figsize=(6,4))
+plt.scatter(X_scaled[:,0], X_scaled[:,1], color='blue', label='Original Data')
+plt.scatter(X_pca, np.zeros_like(X_pca), color='red', label='PCA Projection (1D)')
+plt.xlabel("Feature 1 (scaled)")
+plt.ylabel("Feature 2 (scaled)")
+plt.title("PCA Projection Visualization")
+plt.legend()
+plt.grid(True)
+plt.show()</code></pre>
+
+            <h3>Output Visualization</h3>
+            <div class="diagram">
+                <img src="./temp/a5.png" alt="PCA Projection Visualization">
+            </div>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>9. Confusion Matrix Visualization</h2>
+        </summary>
+        <div class="content">
+            <p>Program to compute and visualize a **Confusion Matrix**, which is essential for evaluating the performance of a classification model.</p>
+
+            <h3>Key Steps</h3>
+            <ol>
+                <li>Define the **actual** (true) and **predicted** labels.</li>
+                <li>Compute the confusion matrix using <code>confusion_matrix</code>.</li>
+                <li>Plot the labeled matrix using <code>ConfusionMatrixDisplay</code> for visualization.</li>
+            </ol>
+            <p class="note">The sample data used is: <code>y_true = [0, 1, 1, 1, 0, 1, 0, 0, 1, 0]</code> and <code>y_pred = [0, 1, 0, 1, 0, 1, 0, 1, 1, 0]</code></p>
+            
+            <h3>Python Code</h3>
+            <pre class="code-block"><code># Import required libraries
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+# Step 1: Define actual (true) and predicted labels
+y_true = [0, 1, 1, 1, 0, 1, 0, 0, 1, 0]   # Actual values
+y_pred = [0, 1, 0, 1, 0, 1, 0, 1, 1, 0]   # Predicted values
+
+# Step 2: Compute the confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+
+# Step 3: Print numeric confusion matrix
+print("Confusion Matrix (numeric form):")
+print(cm)
+
+# Step 4: Plot a labeled confusion matrix (diagram)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm,
+                              display_labels=["Class 0", "Class 1"])
+disp.plot(cmap=plt.cm.Oranges)
+plt.title("Confusion Matrix Visualization")
+plt.show()</code></pre>
+
+            <h3>Output Visualization and Numeric Result</h3>
+            <p>The numeric matrix output is: <code>[[4 1], [1 4]]</code>.</p>
+            <div class="diagram">
+                <img src="./temp/a6.png" alt="Confusion Matrix Visualization">
+            </div>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>10. Accuracy, Precision, Recall, F1 Score Calculations</h2>
+        </summary>
+        <div class="content">
+            <p>Calculations of key classification evaluation metrics using sample ground truth and predicted data.</p>
+            <p class="note">The sample data used is: <code>y_true = [0, 1, 1, 1, 0, 1, 0, 0, 1, 0]</code> and <code>y_pred = [0, 1, 0, 1, 0, 1, 0, 1, 1, 0]</code></p>
+
+            <h3>Key Metrics</h3>
+            <p>These metrics are crucial for assessing the performance of classification models:</p>
+            <ul>
+                <li>**Accuracy:** Overall correctness of the model.</li>
+                <li>**Precision:** The ratio of correctly predicted positive observations to the total predicted positives.</li>
+                <li>**Recall (Sensitivity):** The ratio of correctly predicted positive observations to all observations in the actual class.</li>
+                <li>**F1 Score:** The weighted average of Precision and Recall.</li>
+            </ul>
+
+            <h3>Python Code</h3>
+            <pre class="code-block"><code>from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Sample ground truth (actual values)
+y_true = [0, 1, 1, 1, 0, 1, 0, 0, 1, 0]
+# Sample model predictions
+y_pred = [0, 1, 0, 1, 0, 1, 0, 1, 1, 0]
+
+# Calculate and display
+accuracy = accuracy_score(y_true, y_pred)
+precision = precision_score(y_true, y_pred)
+recall = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)</code></pre>
+
+            <h3>Output Results</h3>
+            <p>All metrics resulted in 0.8 for the provided sample data.</p>
+        </div>
+    </details>
+    
+</body>
+</html>

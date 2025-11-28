@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT Experiments 1-5</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Arduino IOT Practical Assignments (Experiments 1-5)</h1>
+    <p>Click on any experiment title to expand and view the full details, connections, and code.</p>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>1. Interfacing LED - Blinking LED</h2>
+        </summary>
+        <div class="content">
+            <p>Interfacing a Light Emitting Diode (LED) and making it blink is one of the simplest projects you can do with an Arduino.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino board (e.g., Arduino Uno)</li>
+                <li>Breadboard and jumper wires</li>
+                <li>LED (any color)</li>
+                <li>Resistor (220-330 ohms)</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <ol>
+                <li>Connect the positive (longer leg) of the LED to a digital pin on the Arduino (Pin 13).</li>
+                <li>Connect the negative (shorter leg) of the LED to a current-limiting resistor (220-330 ohms).</li>
+                <li>Connect the other end of the resistor to the ground (GND) on the Arduino.</li>
+            </ol>
+            <div class="diagram">
+                
+
+<img src="./temp/1.png" alt="">
+
+            </div>
+
+            <h3>Arduino Code</h3>
+            <pre class="code-block"><code>const int ledPin = 13; // Pin connected to the LED
+void setup() {
+  pinMode(ledPin, OUTPUT); // Set the LED pin as an output
+}
+void loop() {
+  digitalWrite(ledPin, HIGH); // Turn on the LED
+  delay(1000); // Wait for 1 second
+  digitalWrite(ledPin, LOW); // Turn off the LED
+  delay(1000); // Wait for 1 second
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>2. Interfacing Button and LED</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment shows the LED blinking when a button is pressed.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino board (e.g., Arduino Uno)</li>
+                <li>Breadboard and jumper wires</li>
+                <li>LED (any color)</li>
+                <li>Resistor (220-330 ohms)</li>
+                <li>Push-button switch</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <ol>
+                <li>Connect the positive (longer leg) of the LED to a digital pin on the Arduino (Pin 13).</li>
+                <li>Connect the negative (shorter leg) of the LED to a current-limiting resistor (220-330 ohms).</li>
+                <li>Connect the other end of the resistor to the ground (GND) on the Arduino.</li>
+                <li>Connect one side of the push-button switch to another digital pin on the Arduino (Pin 2).</li>
+                <li>Connect the other side of the push-button switch to the ground (GND) on the Arduino.</li>
+            </ol>
+            <div class="diagram">
+                <img src="./temp/image.png" alt="">
+            </div>
+
+            <h3>Arduino Code</h3>
+            <pre class="code-block"><code>const int buttonPin = 2; // Pin connected to the button
+const int ledPin = 13; // Pin connected to the LED
+int buttonState = 0; // Variable to store the button state
+
+void setup() {
+  pinMode(ledPin, OUTPUT); // Set the LED pin as an output
+  pinMode(buttonPin, INPUT); // Set the button pin as an input
+}
+
+void loop() {
+  buttonState = digitalRead(buttonPin); // Read the state of the button (HIGH or LOW)
+  // Check if the button is pressed (buttonState is LOW)
+  if (buttonState == LOW) {
+    digitalWrite(ledPin, HIGH); // Turn on the LED
+    delay(500); // Wait for 500 milliseconds (0.5 seconds)
+    digitalWrite(ledPin, LOW); // Turn off the LED
+    delay(500); // Wait for another 500 milliseconds
+  }
+}</code></pre>
+        </div>
+    </details>
+    
+    <details class="experiment-card">
+        <summary>
+            <h2>3. Interfacing PIR Sensor with LED Indicator</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment details Interfacing a PIR Sensor with Arduino to Drive an LED Indicator.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino Uno (or compatible)</li>
+                <li>PIR sensor (HC-SR501 or similar)</li>
+                <li>1 × LED + 220 Ω resistor (for a visual indicator)</li>
+                <li>Breadboard + jumper wires</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <ol>
+                <li>Connect the PIR sensor’s VCC pin to 5V, GND pin to GND, and OUT pin to digital pin 2 of the Arduino.</li>
+                <li>Connect an LED with a 220 Ω resistor between Arduino pin 9 (anode side) and GND (cathode side).</li>
+            </ol>
+            <p class="note">The LED turns ON when motion is detected and remains OFF when no motion is present. Allow the PIR sensor to warm up for 30–60 seconds after powering ON.</p>
+            <div class="diagram">
+                <img src="./temp/3.png" alt="">
+            </div>
+
+            <h3>Arduino Code</h3>
+            <pre class="code-block"><code>int pirPin = 2; // PIR sensor OUT pin
+int ledPin = 4; // LED pin
+int pirState=0;
+
+void setup() {
+  pinMode(pirPin, INPUT); // Set PIR pin as input
+  pinMode(ledPin, OUTPUT); // Set LED pin as output
+  Serial.begin(9600); // Start serial communication
+}
+
+void loop() {
+  int pirState = digitalRead(pirPin); // Read PIR state
+  if (pirState == HIGH) {
+    digitalWrite(ledPin, HIGH); // Turn LED on
+    Serial.println("Motion Detected!");
+  } else {
+    digitalWrite(ledPin, LOW); // Turn LED off
+  }
+  delay(1000); // Small delay to stabilize reading
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>4. Interfacing DHT11 Temperature & Humidity Sensor</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment shows how to use the DHT11 temperature & humidity sensor with an Arduino.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino Uno (or any compatible board)</li>
+                <li>DHT11 sensor module (3-pin or 4-pin version)</li>
+                <li>Jumper wires</li>
+            </ul>
+
+            <h3>Circuit Connections (DHT11 Module)</h3>
+            <ul>
+                <li>VCC → 5V</li>
+                <li>GND → GND</li>
+                <li>DATA → Digital Pin 2 (or any other)</li>
+            </ul>
+            <div class="diagram">
+                <img src="./temp/4.png" alt="">
+            </div>
+
+            <h3>Arduino Code (Requires DHT Library)</h3>
+            <pre class="code-block"><code>#include "DHT.h"   // Include DHT library
+#define DHTPIN 2     // Pin connected to DATA
+#define DHTTYPE DHT11   // Define sensor type (DHT11 or DHT22)
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  delay(2000); // Wait a few seconds between measurements
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); // Celsius
+
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.println(" °C");
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>5. Interfacing LM35 Temperature Sensor</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment details how to interface the LM35 temperature sensor with Arduino.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino Uno (or compatible)</li>
+                <li>LM35 sensor (TO-92 package, looks like a small transistor)</li>
+                <li>Breadboard</li>
+                <li>Jumper wires</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <p>The LM35 pinout (flat side facing you) is:</p>
+            <ul>
+                <li>Pin 1 (VCC) → Arduino 5V</li>
+                <li>Pin 2 (VOUT) → Arduino A0 (Analog input)</li>
+                <li>Pin 3 (GND) → Arduino GND</li>
+            </ul>
+            <div class="diagram">
+                <img src="./temp/5.png" alt="">
+            </div>
+
+            <h3>Arduino Code (Calculates Temperature)</h3>
+            <pre class="code-block"><code>int sensorPin = A0;   // LM35 output connected to A0
+float sensorValue;	// to store ADC value
+float temperature;	// calculated temperature
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  sensorValue = analogRead(sensorPin); // read analog value (0-1023)
+
+  // Convert to voltage (Arduino is 5V with 10-bit ADC)
+  float voltage = sensorValue * (5.0 / 1023.0);
+  
+  // LM35 gives 10mV per °C (0.01V = 1°C)
+  temperature = voltage * 100;
+  
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+  delay(1000); // read once per second
+}</code></pre>
+        </div>
+    </details>
+
+</body>
+</html>
+
+<details class="experiment-card">
+        <summary>
+            <h2>6. Traffic Signal Simulation with Arduino</h2>
+        </summary>
+        <div class="content">
+            <p>This program simulates a simple traffic light sequence using three LEDs.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino Uno / Nano</li>
+                <li>3 × LEDs (Red, Yellow, Green)</li>
+                <li>3 × 220Ω resistors (one per LED)</li>
+                <li>Breadboard + jumper wire</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <ol>
+                <li>Connect each LED's long leg (anode, +) to a digital pin via a 220Ω resistor. (Red to D8, Yellow to D9, Green to D10).</li>
+                <li>Connect each LED's short leg (cathode, –) to GND.</li>
+            </ol>
+            <div class="diagram">
+              <img src="./temp/6.png" alt="">  
+            </div>
+
+            <h3>Arduino Code</h3>
+            <pre class="code-block"><code>int redLed = 8;
+int yellowLed = 9;
+int greenLed = 10;
+
+void setup() {
+  pinMode(redLed, OUTPUT);
+  pinMode(yellowLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+}
+
+void loop() {
+  // Red ON (Stop)
+  digitalWrite(redLed, HIGH);
+  digitalWrite(yellowLed, LOW);
+  digitalWrite(greenLed, LOW);
+  delay(5000);  // 5 seconds
+
+  // Green ON (Go)
+  digitalWrite(redLed, LOW);
+  digitalWrite(yellowLed, LOW);
+  digitalWrite(greenLed, HIGH);
+  delay(5000);  // 5 seconds
+
+  // Yellow ON (Caution)
+  digitalWrite(redLed, LOW);
+  digitalWrite(yellowLed, HIGH);
+  digitalWrite(greenLed, LOW);
+  delay(2000);  // 2 seconds
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>7. Interfacing Ultrasonic Sensor (Distance Measurement)</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment uses the HC-SR04 sensor to measure distance by calculating the round-trip time of a sound pulse.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino (Uno, Nano, Mega, etc.)</li>
+                <li>Ultrasonic sensor (HC-SR04 or JSN-SR04T)</li>
+                <li>Jumper wires, breadboard (optional)</li>
+            </ul>
+
+            <h3>Circuit Connections</h3>
+            <ul>
+                <li>VCC &nbsp;→ Arduino 5V</li>
+                <li>GND &nbsp;→ Arduino GND</li>
+                <li>Trig &nbsp;→ Arduino digital pin 9</li>
+                <li>Echo &nbsp;→ Arduino digital pin 10</li>
+            </ul>
+            <div class="diagram">
+                <img src="./temp/7.png" alt="">
+            </div>
+
+            <h3>Distance Calculation Formula</h3>
+            <p>The distance is computed from the time (duration in $\mu\text{s}$) the sound takes to travel the round-trip, using the speed of sound:</p>
+            <p class="code-block">$$
+            \text{Distance (cm)} = \text{Duration (}\mu\text{s}) \times 0.01715
+            $$</p>
+
+            <h3>Arduino Code — simple (pulseIn)</h3>
+            <pre class="code-block"><code>// HC-SR04 simple example (Trig=9, Echo=10)
+const int trigPin = 9;
+const int echoPin = 10;
+unsigned long duration;
+float distanceCm;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  // Send 10 microsecond pulse to trigger
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the time for echo
+  duration = pulseIn(echoPin, HIGH, 30000);
+
+  if (duration != 0) {
+    // distance in cm: duration (us) * 0.01715
+    distanceCm = duration * 0.01715;
+    Serial.print("Distance: ");
+    Serial.print(distanceCm);
+    Serial.println(" cm");
+  } else {
+    Serial.println("Out of range");
+  }
+  delay(200);
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>8. Interfacing 7-Segment Display</h2>
+        </summary>
+        <div class="content">
+            <p>This experiment interfaces a Common Cathode 7-segment display to show digits 0–9 sequentially.</p>
+
+            <h3>Display Pinout</h3>
+            <p>A 7-segment display has 7 segments (a–g) and a decimal point (dp). We use a **Common Cathode (CC)** type where the common pin goes to GND.</p>
+            <div class="diagram">
+              <img src="./temp/8.png" alt="">
+             
+            </div>
+
+            <h3>Circuit Connections</h3>
+            <ul>
+                <li>Connect Arduino digital pins **2–8** to segments **a–g**.</li>
+                <li>Use **220Ω resistors** in series with each segment.</li>
+                <li>Connect the **Common Cathode** pin to **GND**.</li>
+            </ul>
+            <p>Wiring Map (Arduino Pin → Segment): D2 → a, D3 → b, D4 → c, D5 → d, D6 → e, D7 → f, D8 → g.</p>
+            <div class="diagram">
+                <img src="./temp/8 b.png" alt="">
+            </div>
+
+            <h3>Arduino Code</h3>
+            <pre class="code-block"><code>// Pin mapping for segments a-g
+int segPins[7] = {2, 3, 4, 5, 6, 7, 8};
+// Digit patterns for 0-9 (1 = ON, 0 = OFF)
+byte digits[10][7] = {
+{1,1,1,1,1,1,0}, // 0 (a,b,c,d,e,f,g)
+// ... patterns for 1 through 9
+{1,1,1,1,0,1,1}  // 9
+};
+
+void setup() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int num = 0; num < 10; num++) {
+    showDigit(num);
+    delay(1000); // 1 second delay
+  }
+}
+
+void showDigit(int num) {
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(segPins[i], digits[num][i]);
+  }
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>9. Interfacing 4x4 Matrix Keypad</h2>
+        </summary>
+        <div class="content">
+            <p>Develop a program to detect and display the pressed key using the serial monitor.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>4×4 matrix keypad (16 keys).</li>
+                <li>Arduino (Uno, Nano, Mega).</li>
+                <li>Jumper wires (8).</li>
+            </ul>
+
+            <h3>Keypad Wiring Map</h3>
+            <p>The keypad has 8 pins (4 rows, 4 columns) that connect directly to 8 digital pins on the Arduino.</p>
+            <ul>
+                <li>Row0 → D9, Row1 → D8, Row2 → D7, Row3 → D6</li>
+                <li>Col0 → D5, Col1 → D4, Col2 → D3, Col3 → D2</li>
+            </ul>
+            <p class="note">**Note:** This experiment requires the **Keypad Library** to be installed in the Arduino IDE.</p>
+            <div class="diagram">
+                <img src="./temp/9.png" alt="">
+                <img src="./temp/9 b.png" alt="">
+            </div>
+
+            <h3>Arduino Code (Requires Keypad Library)</h3>
+            <pre class="code-block"><code>#include <Keypad.h>
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+// Pin numbers matching the wiring map above
+byte rowPins[ROWS] = {9, 8, 7, 6};    // R0, R1, R2, R3
+byte colPins[COLS] = {5, 4, 3, 2};    // C0, C1, C2, C3
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  char k = keypad.getKey();
+  if (k) {
+    Serial.print("Key: ");
+    Serial.println(k);
+  }
+}</code></pre>
+        </div>
+    </details>
+
+    <details class="experiment-card">
+        <summary>
+            <h2>10. Interfacing 16x2 LCD Display (4-bit Mode)</h2>
+        </summary>
+        <div class="content">
+            <p>This method uses 6 digital pins of Arduino to interface the 16x2 LCD in 4-bit parallel mode.</p>
+
+            <h3>Components Required</h3>
+            <ul>
+                <li>Arduino Uno (or compatible)</li>
+                <li>16x2 LCD (HD44780 type)</li>
+                <li>10kΩ potentiometer (for contrast)</li>
+                <li>220Ω resistor (for backlight LED)</li>
+            </ul>
+
+            <h3>Control and Data Connections</h3>
+            <ul>
+                <li>**RS** (Register Select) → Arduino pin 12</li>
+                <li>**EN** (Enable) → Arduino pin 11</li>
+                <li>**D4** → Arduino pin 5</li>
+                <li>**D5** → Arduino pin 4</li>
+                <li>**D6** → Arduino pin 3</li>
+                <li>**D7** → Arduino pin 2</li>
+                <li>**RW** (Read/Write) → GND</li>
+            </ul>
+            <p class="note">The V0 (Contrast) pin goes to the middle pin of the 10kΩ potentiometer.</p>
+            <div class="diagram">
+                <img src="./temp/10.png" alt="">
+                <img src="./temp/10 b.png" alt="">
+            </div>
+
+            <h3>Arduino Code (Requires LiquidCrystal Library)</h3>
+            <pre class="code-block"><code>#include <LiquidCrystal.h>;
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2, ct=9;
+LiquidCrystal mylcd(rs, en, d4, d5, d6, d7);
+
+void setup() {
+  // Sets PWM brightness for the LCD backlight (50/255 ≈ 20% brightness)
+  // Note: ct=9 is defined in the const line but not strictly needed for basic operation 
+  // if backlight is wired directly to 5V via resistor.
+  analogWrite(ct,50);
+  
+  mylcd.begin(16, 2); // Initializes the LCD with 16 columns and 2 rows.
+  mylcd.print("Hello, Arduino!"); // Displays text on the first line.
+}
+
+void loop()
+{
+}</code></pre>
+        </div>
+    </details>
+
+</body>
+</html>
