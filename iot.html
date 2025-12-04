@@ -17,7 +17,7 @@
         </summary>
         <div class="content">
             <p>Interfacing a Light Emitting Diode (LED) and making it blink is one of the simplest projects you can do with an Arduino.</p>
-
+  
             <h3>Components Required</h3>
             <ul>
                 <li>Arduino board (e.g., Arduino Uno)</li>
@@ -419,9 +419,16 @@ void loop() {
 int segPins[7] = {2, 3, 4, 5, 6, 7, 8};
 // Digit patterns for 0-9 (1 = ON, 0 = OFF)
 byte digits[10][7] = {
-{1,1,1,1,1,1,0}, // 0 (a,b,c,d,e,f,g)
-// ... patterns for 1 through 9
-{1,1,1,1,0,1,1}  // 9
+{1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}  // 9
 };
 
 void setup() {
@@ -472,7 +479,7 @@ void showDigit(int num) {
             </div>
 
             <h3>Arduino Code (Requires Keypad Library)</h3>
-            <pre class="code-block"><code>#include <Keypad.h>
+            <pre class="code-block"><code>#include &lt;Keypad.h&gt;
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
